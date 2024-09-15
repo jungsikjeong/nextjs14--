@@ -1,26 +1,10 @@
+'use client';
+
 import ImagePicker from '@/components/meals/image-picker';
 import classes from './page.module.css';
+import { sharemeal } from '@/lib/actions';
 
 export default function ShareMealPage() {
-  // 함수안의 use server는
-  // Server Action을 생성함,
-  // 오직 서버 컴포넌트에서만 실행될 수 있게 보장해주는 기능을함 async를 꼭 붙여야함
-  // 이렇게해주면 formData를받아올 수 있음
-  async function sharemeal(formData) {
-    'use server';
-
-    const meal = {
-      title: formData.get('title'),
-      summary: formData.get('summary'),
-      instructions: formData.get('instructions'),
-      image: formData.get('image'),
-      creator: formData.get('name'),
-      creator_email: formData.get('email'),
-    };
-
-    console.log(meal);
-  }
-
   return (
     <>
       <header className={classes.header}>
