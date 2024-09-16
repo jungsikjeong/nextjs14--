@@ -1,12 +1,11 @@
-import Link from 'next/link';
-import React from 'react';
+import NewsList from '@/components/news-list';
+import { DUMMY_NEWS } from '@/dummy-news';
 
 export default function NewsPage() {
   return (
     <>
-      <Link href='/news/:id'>첫번째 뉴스 아이템</Link>
-      <Link href='/'>두번째 뉴스 아이템</Link>
-      <Link href='/'>세번째 뉴스 아이템</Link>
+      <h1>News Page</h1>
+      <NewsList news={DUMMY_NEWS} />
     </>
   );
 }
