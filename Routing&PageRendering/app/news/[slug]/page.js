@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export default function NewsDetailPage({ params }) {
-  const newsId = params.id;
-  const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsId);
+  const newsSlug = params.slug;
+  const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsSlug);
 
   if (!newsItem) {
     notFound();
