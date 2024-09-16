@@ -1,5 +1,6 @@
 'use client';
 
+import { useFormState } from 'react-dom';
 import classes from './meals-form.module.css';
 
 import { shareMeal } from '@/lib/actions';
@@ -16,8 +17,10 @@ export default function MealsForm() {
     await shareMeal(formData);
   }
 
+  const [state, formAction] = useFormState(handleSubmit, { message: null });
+
   return (
-    <form className={classes.form} onSubmit={handleSubmit}>
+    <form className={classes.form} onSubmit={formAction}>
       <div className={classes.row}>
         <p>
           <label htmlFor='name'>Your name</label>
@@ -49,6 +52,7 @@ export default function MealsForm() {
       <ImagePicker label='Your image' name='image' />
 
       <p className={classes.actions}>
+        {state.message && <p>{state.message}</p>}
         <MealsFormSubmit />
       </p>
     </form>
