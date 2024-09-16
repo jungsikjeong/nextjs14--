@@ -2,10 +2,9 @@
 
 import classes from './meals-form.module.css';
 
-import ImagePicker from './image-picker';
-import MealsFormSubmit from './meals-form.-submit';
 import { shareMeal } from '@/lib/actions';
-import { useFormStatus } from 'react-dom';
+import ImagePicker from './image-picker';
+import MealsFormSubmit from './meals-form.submit';
 
 export default function MealsForm() {
   async function handleSubmit(e) {
