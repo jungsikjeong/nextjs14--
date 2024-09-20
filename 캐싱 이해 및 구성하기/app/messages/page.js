@@ -10,7 +10,7 @@ import { getMessages } from '@/lib/messages';
 // export const dynamic = 'force-dynamic' // fetch요청에서 캐시 설정을 no-store로 설정한것과 같음
 // export const dynamic = 'force-static' // 캐싱처리된 데이터만 가져옴, 새로운 데이터 X
 
-export default function MessagesPage() {
+export default async function MessagesPage() {
   // export const dynamic = 'force-dynamic'와 같음, 하지만 더 나은 방식임
   // 데이터가 캐시되지 않도록 확실하게 하고자 하는 컴포넌트 내에서 호출한다.
   // 이 컴포넌트 또는 이 컴포넌트로부터 보내질 수 있는 모든 데이터 소스에대한 요청에 대해 얻게된다.
@@ -18,7 +18,7 @@ export default function MessagesPage() {
   // const response = await fetch('http://localhost:8080/messages');
   // const messages = await response.json();
 
-  const messages = getMessages();
+  const messages = await getMessages();
 
   if (!messages || messages.length === 0) {
     return <p>No messages found</p>;
