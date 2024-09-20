@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import sql from 'better-sqlite3';
 
 const db = new sql('messages.db');
@@ -16,7 +17,8 @@ export function addMessage(message) {
   db.prepare('INSERT INTO messages (text) VALUES (?)').run(message);
 }
 
-export function getMessages() {
+// 여러곳에서 사용해도 응답 결과를 캐싱처리해서 한번만 호출이 됌
+export const getMessages = cache(function getMessages() {
   console.log('Fetching messages from db');
   return db.prepare('SELECT * FROM messages').all();
-}
+});
