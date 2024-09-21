@@ -1,6 +1,7 @@
-"use client";
+'use client';
 
 import { useOptimistic } from 'react';
+import Image from 'next/image';
 
 import { formatDate } from '@/lib/format';
 import LikeButton from './like-icon';
@@ -8,11 +9,15 @@ import { togglePostLikeStatus } from '@/actions/posts';
 
 function Post({ post, action }) {
   return (
-    <article className="post">
-      <div className="post-image">
-        <img src={post.image} alt={post.title} />
+    <article className='post'>
+      <div className='post-image'>
+        <Image
+          src={post.image}
+          fill // 부모컨테이너의 크기를 따라감 여기선 .post-image div태그를 따라감
+          alt={post.title}
+        />
       </div>
-      <div className="post-content">
+      <div className='post-content'>
         <header>
           <div>
             <h2>{post.title}</h2>
@@ -39,20 +44,25 @@ function Post({ post, action }) {
 }
 
 export default function Posts({ posts }) {
-  const [optimisticPosts, updateOptimisticPosts] = useOptimistic(posts, (prevPosts, updatedPostId) => {
-    const updatedPostIndex = prevPosts.findIndex(post => post.id === updatedPostId);
+  const [optimisticPosts, updateOptimisticPosts] = useOptimistic(
+    posts,
+    (prevPosts, updatedPostId) => {
+      const updatedPostIndex = prevPosts.findIndex(
+        (post) => post.id === updatedPostId
+      );
 
-    if (updatedPostIndex === -1) {
-      return prevPosts;
+      if (updatedPostIndex === -1) {
+        return prevPosts;
+      }
+
+      const updatedPost = { ...prevPosts[updatedPostIndex] };
+      updatedPost.likes = updatedPost.likes + (updatedPost.isLiked ? -1 : 1);
+      updatedPost.isLiked = !updatedPost.isLiked;
+      const newPosts = [...prevPosts];
+      newPosts[updatedPostIndex] = updatedPost;
+      return newPosts;
     }
-
-    const updatedPost = { ...prevPosts[updatedPostIndex] };
-    updatedPost.likes = updatedPost.likes + (updatedPost.isLiked ? -1 : 1);
-    updatedPost.isLiked = !updatedPost.isLiked;
-    const newPosts = [...prevPosts];
-    newPosts[updatedPostIndex] = updatedPost;
-    return newPosts;
-  })
+  );
 
   if (!optimisticPosts || optimisticPosts.length === 0) {
     return <p>There are no posts yet. Maybe start sharing some?</p>;
@@ -64,7 +74,7 @@ export default function Posts({ posts }) {
   }
 
   return (
-    <ul className="posts">
+    <ul className='posts'>
       {optimisticPosts.map((post) => (
         <li key={post.id}>
           <Post post={post} action={updatePost} />
