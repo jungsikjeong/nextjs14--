@@ -75,3 +75,22 @@ export async function verifyAuth() {
 
   return result;
 }
+
+export async function destorySession() {
+  const { session } = await verifyAuth();
+  if (!session) {
+    return {
+      error: 'Unauthorized!',
+    };
+  }
+
+  lucia.invalidateSession(session.id);
+
+  const sessionCookie = lucia.createBlankSessionCookie();
+
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes
+  );
+}
