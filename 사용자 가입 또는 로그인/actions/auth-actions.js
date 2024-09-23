@@ -1,8 +1,8 @@
 'use server';
 
 import { createAuthSession } from '@/lib/auth';
-import { hashUserPassword } from '@/lib/hash';
-import { createUser } from '@/lib/user';
+import { hashUserPassword, verifyPassword } from '@/lib/hash';
+import { createUser, getUserByEmail } from '@/lib/user';
 import { redirect } from 'next/navigation';
 
 export async function signup(prevState, formData) {
@@ -43,4 +43,33 @@ export async function signup(prevState, formData) {
 
     throw error;
   }
+}
+
+export async function login(prevState, formData) {
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  const existingUser = getUserByEmail(email);
+
+  if (!existingUser) {
+    return {
+      errors: {
+        email: '등록된 사용자가 아닙니다.',
+      },
+    };
+  }
+
+  const isValidPassword = verifyPassword(existingUser.password, password);
+
+  if (!isValidPassword) {
+    return {
+      errors: {
+        password: '비밀번호가 일치하지 않습니다.',
+      },
+    };
+  }
+
+  await createAuthSession(existingUser.id);
+
+  redirect('/training');
 }
