@@ -28,3 +28,50 @@ export async function createAuthSession(userId) {
     sessionCookie.attributes
   );
 }
+
+export async function verifyAuth() {
+  console.log('lucia.sessionCookieName:', lucia.sessionCookieName);
+  const sessionCookie = cookies().get(lucia.sessionCookieName);
+
+  if (!sessionCookie) {
+    return {
+      user: null,
+      session: null,
+    };
+  }
+
+  const sessionId = sessionCookie.value;
+
+  if (!sessionId) {
+    return {
+      user: null,
+      session: null,
+    };
+  }
+
+  const result = await lucia.validateSession(sessionId);
+  console.log('result::', result);
+
+  try {
+    if (result.session && result.session.fresh) {
+      const sessionCokie = lucia.createSessionCookie(result.session.id);
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+
+    if (!result.session) {
+      const sessionCokie = lucia.createBlankSessionCookie();
+
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+  } catch (error) {}
+
+  return result;
+}
